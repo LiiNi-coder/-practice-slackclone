@@ -24,3 +24,20 @@
 </body>
 ```
 jsx로 만든 태그들이 app으로 설정되어있으니 저 dist/app.js의 내용은 id가 app인 div를 채워넣는다고 생각하면된다.
+
+---
+
+# ts + webpack 실행하기
+
+## `npx webpack`으로 js파일을 빌드할때 NODE_ENV=production을 하면 js용량이 줄어들어 좋다!
+그래서 보통 `NODE_ENV=production npx webpack`명령어를 많이 쓰는데,
+**윈도우에선 저 명령어가 안된다**
+`cross-env NODE_ENV=production npx webpack`을 치면 되는데,
+
+이걸위해선 `cross-env`, `ts-node`를 설치해야한다.
+resolve에러는 --force를 붙여서 설치하면된다.
+
+현재 이 레포에선 `npm run build`로 정적으로 명시해놓았다.
+
+빌드한결과
+![](img\간단한웹팩빌드후실행사진.png)
