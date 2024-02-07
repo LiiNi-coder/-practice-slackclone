@@ -1,16 +1,17 @@
 {
+  //TS->바벨->JS로 변환되는데, 바벨이 왜 끼냐? 모든 파일을 JS로 바꿔줘서 편함(이미지 뭐시기 모두)
   "compilerOptions": {
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "lib": ["ES2020", "DOM"],
-    "jsx": "react",
-    "module": "esnext",
+    "esModuleInterop": true, //import * as React from 'react'; -> import React from "react";이렇게 가능해짐
+    "sourceMap": true,//원래 에러위치 찾기 좋음
+    "lib": ["ES2020", "DOM"],//최신문법, 프론트 개발할때 이렇게 함
+    "jsx": "react",//jsx는 react꺼다
+    "module": "esnext",//최신모듈을 가져옴
     "moduleResolution": "Node",
-    "target": "es5",
-    "strict": true,
+    "target": "es5",//소스코드를 es2020으로 작성해도 es5로 빌드
+    "strict": true, //타입스크립트는 반드시 이걸 켜야 의미가 있음
     "resolveJsonModule": true,
     "baseUrl": ".",
-    "paths": {
+    "paths": { // import ../../../ 이런거 막아주는 용도
       "@hooks/*": ["hooks/*"],
       "@components/*": ["components/*"],
       "@layouts/*": ["layouts/*"],
