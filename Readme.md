@@ -41,3 +41,44 @@ resolve에러는 --force를 붙여서 설치하면된다.
 
 빌드한결과
 ![](img\간단한웹팩빌드후실행사진.png)
+
+# 웹팩 데브 서버 설정하기
+
+## tsx하나 바꿀때마다 빌드 다시해야하나? 아니다! 핫리로딩!
+단, 핫리로딩 서버가 필요하다 이게 바로 웹팩데브서버
+`npm i webpack-dev-server -D` -D는 개발전용이란뜻  
+`npm i -D @types/webpack-dev-server`  
+`npm i @pmmmwh/react-refresh-webpack-plugin`  
+`npm i react-refresh`  
+이런거 귀찮으니 그냥 다음엔 **CRA(Create React App)**사용하자.
+
+webpack.config.ts에도  
+```javascript
+if (isDevelopment && config.plugins) {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
+  config.plugins.push(new ReactRefreshWebpackPlugin());
+}
+```  
+
+```javascript
+env: {
+  development: {
+   plugins: [require.resolve('react-refresh/babel')],
+  },
+},
+```
+
+```javascript
+  devServer: {
+    historyApiFallback: true, // react router
+    port: 3090,
+    devMiddleware: { publicPath: '/dist/' },
+    static: { directory: path.resolve(__dirname) },
+  },
+```
+를 넣어야한다.
+
+이제 dev서버를 여는 스크립트는  
+`webpack serve --env development`이다.
+
+![](/img/웹펙데브서버_핫리로딩으로index파일연사진.png)
