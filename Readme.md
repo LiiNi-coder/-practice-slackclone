@@ -1,7 +1,13 @@
 # babel과 webpack 설정하기
-## 프론트엔드의 최종 결과물은 결국 HTML, CSS, JS 이 3가지뿐!
+
+## Babel
+개발자가 옛날 브라우저 환경을 신경안쓰고 개발해도되도록 js 최신버전을 호환버전으로 트랜스 파일링 해주는 역할
+
+## Webpack
 우리는 css, js같은 파일들은 프레임워크에서 제시해주는 색다른 파일구조로 만들것이고,
 결국 이들을 Webpack이 최종 결과물 형식인 css, js로 바꿔주는 역할을 해줌.
+
+## 프론트엔드의 최종 결과물은 결국 HTML, CSS, JS 이 3가지뿐!
 
 ## 그럼 HTML도 만들어주냐? 그건아니다! 이건 우리가 원 파일 그대로 만들어줘야함
 
@@ -82,3 +88,61 @@ env: {
 `webpack serve --env development`이다.
 
 ![](/img/웹펙데브서버_핫리로딩으로index파일연사진.png)
+
+# 폴더 구조 및 리액트 라우터
+
+## 폴더구조는 취향차이
+### 구성 예시
+강사 Zerocho는 이렇게 구성한다
+- pages - _React는 SPA여도 페이지개념이 있다 그걸 저장_
+- components - _React의 세부 컴포넌트_
+- layouts - _페이지들간의 공통컴포넌트_
+
+### 구성 예시(실제)
+![](/img/폴더구조예시사진.png)
+![](/img/폴더구조alias.png)
+위 그림은 Pages에 Login 및 회원가입 컴포넌트를 폴더로 만들고 각각에 index.tsx(컴포넌트 메인), sytle.tsc(컴포넌트 css)로 만드는 편
+또한 webpack.config.ts의 alias에 미리 정의를 해두는 것이 좋다.(위에선 @로 표현하는데 ~이나 아예 없이 쓰는 사람도 있다)
+
+## slack을 만들기 위해 Pages를 나누고, Router를 정의한다
+`npm i -D @types/react-router @types/react-router-dom`
+
+```javascript
+//layouts/App.tsx
+...
+const App = ()=>{
+  return <Switch>
+    <Redirect exact path='/' to="/login" />
+    <Route path="/login" component={LogIn} />
+    <Route path="/signup" component={SignUp} />
+  </Switch>
+};
+```
+### Switch
+페이지 라우터를 Switch로 감싼 것 중 반드시 하나만 동작되도록 하는것
+2개 이상이 동시에 될 수 없고, 저것들중 아무것도 안될순 없다.
+
+### Redirect
+path로 명령을 받으면 to옵션에 해당하는 곳으로 보내주는 것
+_따라서 저 위에선 ~/를 입력하면 /login을 불러내니 2번째 줄이 실행된다._
+
+### 또한 Switch를 쓰기위해선 반드시 <Router>안에 써야함
+```javascript
+//client.tsx
+...
+render(
+  <BrowserRouter> // <-----
+    <App />
+  </BrowserRouter>, // <-----
+  document.querySelector('#app'),
+);
+```
+## 원래 주소를 적고 새로고침을하면 React는 못알아먹는데
+그런데 왜 이 프로젝트에선 새로고침해도 잘만 유지되는걸까?
+### historyApiFallback
+`webpack.config.ts`의 `devServer`에 `historyApiFallback: true`를 해서 주소를 사기 칠수있다(서버상엔 실제 없는 주소인데 프론트입장에서 되도록 해주는것).
+원랜 SPA에선 URL이란 개념이 없다. 오로지 index.html만 가능해서 local:3090/ 이라는 주소 하나만 존재하는게 맞는데,
+위에 저 옵션이 true면 가짜주소를 만들어내준다.
+**주의! 단 이 행동들은 프론트에서만 일어나고, URL을 쳤을때 서버 입장에선 오로지 local:3090만 전해진다! 뒤에 /login or /signup을 치던 다 무시된다!**
+
+## Redux(상태관리)의 대항마로 jotai recoil, zustand들이 있다.
